@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.uchain.mapper.WorksInformationMapper">
+
+
+    <sql id="commonSelect">
+        select
+               works_name,
+               works_property,
+               create_time,
+               introduce,
+               create_address,
+               publish_state,
+               firstpublish_time,
+               publish_address,
+               w_id
+        from works_information
+    </sql>
+
+    <!--    根据id修改商品信息 -->
+    <update id="updateById">
+        update works_information
+
+        <set>
+            <if test="worksName != null and worksName !=''  ">
+                works_name = #{worksName},
+            </if>
+            <if test="worksProperty != null and worksProperty !=''  ">
+                works_property = #{worksProperty},
+            </if>
+
+            <if test="createTime != null ">
+                create_time = #{createTime},
+            </if>
+
+            <if test="introduce != null and introduce !='' ">
+                introduce = #{introduce},
+            </if>
+
+
+            <if test="createAddress != null and createAddress !='' ">
+                create_address = #{createAddress},
+            </if>
+
+            <if test="publishState != null ">
+                publish_state = #{publishState},
+            </if>
+
+            <if test="firstpublishTime != null ">
+                firstpublish_time = #{firstpublishTime},
+            </if>
+
+            <if test="publishAddress != null and publishAddress !='' ">
+                publish_address = #{publishAddress},
+            </if>
+
+            <if test="wid != null ">
+                w_id = #{wid},
+            </if>
+
+        </set>
+        where w_id = #{wid}
+
+    </update>
+
+    <!--    批量删除  根据id-->
+    <delete id="deleteInformationById">
+        delete from works_information where w_id in
+        <foreach collection="wids" item="wid" separator="," open="(" close=")">
+            #{wid}
+        </foreach>
+    </delete>
+
+<!--    根据id或者是创作性质搜索-->
+    <select id="findAll1" resultType="com.example.uchain.demo.WorksInformation">
+
+        #         引用sql语句
+        <include refid="commonSelect"/>
+
+        <!--#        <where> 把多余的and给去掉-->
+        <where>
+        <choose>
+
+            <when test="code==1">
+                <if test="worksName != null">
+                       works_name  like concat('%', #{worksName}, '%')
+                </if>
+            </when>
+
+            <when test="code==2">
+                <if test="worksProperty != null">
+                    works_property like concat('%', #{worksProperty}, '%')
+                </if>
+            </when>
+            <when test="code==3">
+                <if test="publishAddress != null">
+                    publish_address  like concat('%', #{publishAddress}, '%')
+                </if>
+            </when>
+            <when test="code==4">
+                <if test="publishState != null">
+                    publish_state  like concat('%', #{publishState}, '%')
+                </if>
+            </when>
+            <when test="code==5">
+                <if test="createAddress != null">
+                    create_address  like concat('%', #{createAddress}, '%')
+                </if>
+            </when>
+            <when test="code==6">
+                <if test="wid != null">
+                    w_id = #{wid}
+                </if>
+            </when>
+        </choose>
+
+        </where>
+        order by w_id desc
+
+    </select>
+
+</mapper>

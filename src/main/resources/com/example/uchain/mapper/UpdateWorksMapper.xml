@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.uchain.mapper.UpdateWorksMapper">
+
+
+    <sql id="commonSelect">
+        select works_type,
+               works_file,
+               work_id
+        from update_works
+    </sql>
+
+    <!--    根据id修改商品信息 -->
+    <update id="updateById">
+        update update_works
+
+        <set>
+            <if test="worksType != null and worksType !='' ">
+                works_type = #{worksType},
+            </if>
+
+            <if test="worksFile != null and worksFile !='' ">
+                works_file = #{worksFile},
+            </if>
+
+            <if test="workId != null ">
+                work_id = #{workId},
+            </if>
+
+
+        </set>
+        where work_id = #{workId}
+
+    </update>
+
+    <!--    批量删除  根据id-->
+    <delete id="deleteUpdateById">
+        delete from update_works where work_id in
+        <foreach collection="workIds" item="workId" separator="," open="(" close=")">
+            #{workId}
+        </foreach>
+    </delete>
+
+</mapper>

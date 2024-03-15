@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.uchain.mapper.WorksMapper">
+
+
+    <sql id="commonSelect">
+        select id,
+               name,
+               archor_id
+        from works
+    </sql>
+
+    <!--    根据id修改商品信息 -->
+    <update id="updateById">
+        update works
+
+        <set>
+            <if test="id != null ">
+                id = #{id},
+            </if>
+
+            <if test="name != null and name !='' ">
+                name = #{name},
+            </if>
+
+            <if test="archorId != null">
+                archor_id = #{archorId},
+            </if>
+
+        </set>
+        where id = #{id}
+
+    </update>
+
+    <!--    批量删除  根据id-->
+    <delete id="deleteWorkById">
+        delete from works where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.uchain.mapper.MemberMapper">
+
+
+    <sql id="commonSelect">
+        select user_name ,
+               id,
+               sign,
+               age,
+               sex,
+               phone_number,
+               password,
+               email,
+               qq,
+               wx,
+               balance,
+               blockAddress
+        from member
+    </sql>
+
+<!--    //修改会员信息-->
+    <update id="updateById">
+        update member
+
+        <set>
+            <if test="userName != null and userName !='' ">
+                user_name = #{userName},
+            </if>
+
+            <if test="sign != null ">
+                sign = #{sign},
+            </if>
+
+            <if test="age != null ">
+                age = #{age},
+            </if>
+
+
+            <if test="sex != null  ">
+                sex = #{sex},
+            </if>
+
+            <if test="phoneNumber != null and phoneNumber !=''">
+                phone_number = #{phoneNumber},
+            </if>
+
+            <if test="password != null and password !='' ">
+                password = #{password},
+            </if>
+            <if test="email != null and email !='' ">
+                email = #{email},
+            </if>
+            <if test="qq != null and qq !='' ">
+                qq = #{qq},
+            </if>
+            <if test="wx != null and wx !='' ">
+                wx = #{wx},
+            </if>
+            <if test="balance != null and balance !='' ">
+                balance = #{balance},
+            </if>
+            <if test="blockAddress != null and blockAddress !='' ">
+                blockAddress = #{blockAddress},
+            </if>
+        </set>
+        where id = #{id}
+
+    </update>
+
+<!--    批量删除  根据id-->
+    <delete id="deleteMemById">
+        delete from member where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+<!--    分页查询全部信息-->
+    <select id="findAll" resultType="com.example.uchain.demo.Member">
+--                 #         引用sql语句
+        <include refid="commonSelect"/>
+
+        <!--#        <where> 把多余的and给去掉-->
+        <where>
+            <if test="userName != null">
+                user_name like concat('%', #{userName}, '%')
+            </if>
+            <if test="sex != null">
+                and sex = #{sex}
+            </if>
+        </where>
+         order by id desc
+    </select>
+
+</mapper>

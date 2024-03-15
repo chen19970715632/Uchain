@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.uchain.mapper.GoodsMapper">
+
+
+    <sql id="commonSelect">
+        select price ,
+               works_id,
+               name,
+               id,
+               block_number
+        from goods
+    </sql>
+
+<!--    根据id修改商品信息 -->
+    <update id="updateById">
+        update goods
+
+        <set>
+            <if test="price != null ">
+                price = #{price},
+            </if>
+
+            <if test="worksId != null ">
+                works_id = #{worksId},
+            </if>
+
+            <if test="name != null and name !='' ">
+                name = #{name},
+            </if>
+
+            <if test="id != null  ">
+                id = #{id},
+            </if>
+
+            <if test="blockNumber != null ">
+                block_number = #{blockNumber},
+            </if>
+
+        </set>
+        where id = #{id}
+
+    </update>
+
+    <!--    批量删除  根据id-->
+    <delete id="deleteGoodById">
+        delete from goods where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

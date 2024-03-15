@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.uchain.mapper.TradeMapper">
+
+
+    <sql id="commonSelect">
+        select
+            ownerName,
+            ownerContact,
+            workName,
+            workType,
+            tradingTime,
+            blockAddress,
+            certificateFile,
+            CRId,
+            authorization,
+            price,
+            PurchaseState,
+            FavoritesState,
+            treadTime,
+            isExpand,
+            uid
+        from trade
+    </sql>
+
+    <!--    根据id修改商品信息 -->
+    <update id="updateById">
+        update trade
+
+        <set>
+            <if test="ownerName != null and ownerName !=''  ">
+                ownerName = #{ownerName},
+            </if>
+            <if test="ownerContact != null and ownerContact !=''  ">
+                ownerContact = #{ownerContact},
+            </if>
+
+            <if test="workName != null ">
+                workName = #{workName},
+            </if>
+
+            <if test="workType != null and workType !='' ">
+                workType = #{workType},
+            </if>
+
+
+            <if test="tradingTime != null and tradingTime !='' ">
+                tradingTime = #{tradingTime},
+            </if>
+
+            <if test="blockAddress != null and blockAddress !=''" >
+                blockAddress = #{blockAddress},
+            </if>
+
+            <if test="certificateFile != null ">
+                certificateFile = #{certificateFile},
+            </if>
+
+            <if test="authorization != null and authorization !='' ">
+                authorization = #{authorization},
+            </if>
+
+            <if test="PurchaseState != null and PurchaseState !='' ">
+                PurchaseState = #{PurchaseState},
+            </if>
+
+            <if test="FavoritesState != null and FavoritesState !='' ">
+                FavoritesState = #{FavoritesState},
+            </if>
+
+            <if test="isExpand != null and isExpand !='' ">
+                isExpand = #{isExpand},
+            </if>
+
+        </set>
+        where CRId = #{CRId}
+
+    </update>
+
+
+    <update id="updateById1">
+        update trade
+        <set>
+            PurchaseState = CASE WHEN PurchaseState = true THEN false ELSE true END,
+            treadTime = #{treadTime},
+            uid = #{uid},
+        </set>
+        where CRId = #{CRId}
+    </update>
+
+
+    <update id="updateById2">
+        update trade
+        <set>
+            FavoritesState = CASE WHEN FavoritesState = true THEN false ELSE true END,
+            uid = #{uid},
+        </set>
+        where CRId = #{CRId}
+    </update>
+
+    <update id="updateById3">
+        update trade
+        <set>
+            isExpand = CASE WHEN isExpand = true THEN false ELSE true END,
+        </set>
+        where CRId = #{CRId}
+    </update>
+
+    <!--    批量删除  根据id-->
+    <delete id="deleteTradeById">
+        delete from trade where CRId in
+        <foreach collection="CRIds" item="CRId" separator="," open="(" close=")">
+            #{CRId}
+        </foreach>
+    </delete>
+
+    <!-- 分页查询 六个查询条件 -->
+    <select id="findAll" resultType="com.example.uchain.demo.Trade">
+
+        <!-- 引用sql语句 -->
+        <include refid="commonSelect"/>
+
+        <!-- 限定查询条件 -->
+        <where>
+            PurchaseState = 0
+            <choose>
+                <!-- 查询条件1：ownerName -->
+                <when test="code==1 and ownerName != null">
+                    AND ownerName LIKE CONCAT('%', #{ownerName}, '%')
+                </when>
+
+                <!-- 查询条件2：workName -->
+                <when test="code==2 and workName != null">
+                    AND workName LIKE CONCAT('%', #{workName}, '%')
+                </when>
+
+                <!-- 查询条件3：CRId -->
+                <when test="code==3 and CRId != null">
+                    AND CRId = #{CRId}
+                </when>
+
+                <!-- 查询条件4：workType -->
+                <when test="code==4 and workType != null">
+                    AND workType LIKE CONCAT('%', #{workType}, '%')
+                </when>
+
+                <!-- 查询条件5：authorization -->
+                <when test="code==5 and authorization != null">
+                    AND authorization LIKE CONCAT('%', #{authorization}, '%')
+                </when>
+
+                <!-- 查询条件6：blockAddress -->
+                <when test="code==6 and blockAddress != null">
+                    AND blockAddress LIKE CONCAT('%', #{blockAddress}, '%')
+                </when>
+            </choose>
+        </where>
+
+        <!-- 按CRId 和交易时间降序排序 -->
+        ORDER BY treadTime DESC, CRId DESC
+    </select>
+    <!-- 分页查询 六个查询条件 -->
+    <select id="findAll2" resultType="com.example.uchain.demo.Trade">
+
+        <!-- 引用sql语句 -->
+        <include refid="commonSelect"/>
+
+        <!-- 限定查询条件 -->
+        <where>
+            FavoritesState = 1
+            <choose>
+                <!-- 查询条件1：ownerName -->
+                <when test="code==1 and ownerName != null">
+                    AND ownerName LIKE CONCAT('%', #{ownerName}, '%')
+                </when>
+
+                <!-- 查询条件2：workName -->
+                <when test="code==2 and workName != null">
+                    AND workName LIKE CONCAT('%', #{workName}, '%')
+                </when>
+
+                <!-- 查询条件3：CRId -->
+                <when test="code==3 and CRId != null">
+                    AND CRId = #{CRId}
+                </when>
+
+                <!-- 查询条件4：workType -->
+                <when test="code==4 and workType != null">
+                    AND workType LIKE CONCAT('%', #{workType}, '%')
+                </when>
+
+                <!-- 查询条件5：authorization -->
+                <when test="code==5 and authorization != null">
+                    AND authorization LIKE CONCAT('%', #{authorization}, '%')
+                </when>
+
+                <!-- 查询条件6：blockAddress -->
+                <when test="code==6 and blockAddress != null">
+                    AND blockAddress LIKE CONCAT('%', #{blockAddress}, '%')
+                </when>
+            </choose>
+        </where>
+
+        <!-- 按CRId 和交易时间降序排序 -->
+        ORDER BY treadTime DESC, CRId DESC
+    </select>
+    <select id="findAll3" resultType="com.example.uchain.demo.Trade">
+        <!-- 引用sql语句 -->
+        <include refid="commonSelect"/>
+
+        <!-- 限定查询条件 -->
+        <where>
+            FavoritesState = 1
+            AND PurchaseState = 1
+            <choose>
+                <!-- 查询条件1：ownerName -->
+                <when test="code==1 and ownerName != null">
+                    AND ownerName LIKE CONCAT('%', #{ownerName}, '%')
+                </when>
+
+                <!-- 查询条件2：workName -->
+                <when test="code==2 and workName != null">
+                    AND workName LIKE CONCAT('%', #{workName}, '%')
+                </when>
+
+                <!-- 查询条件3：CRId -->
+                <when test="code==3 and CRId != null">
+                    AND CRId = #{CRId}
+                </when>
+
+                <!-- 查询条件4：workType -->
+                <when test="code==4 and workType != null">
+                    AND workType LIKE CONCAT('%', #{workType}, '%')
+                </when>
+
+                <!-- 查询条件5：authorization -->
+                <when test="code==5 and authorization != null">
+                    AND authorization LIKE CONCAT('%', #{authorization}, '%')
+                </when>
+
+                <!-- 查询条件6：blockAddress -->
+                <when test="code==6 and blockAddress != null">
+                    AND blockAddress LIKE CONCAT('%', #{blockAddress}, '%')
+                </when>
+
+                <!-- 查询条件7：uid -->
+                <when test="code==7 and uid != null">
+                    AND uid = #{uid}
+                </when>
+
+            </choose>
+        </where>
+
+        <!-- 按CRId 和交易时间降序排序 -->
+        ORDER BY treadTime DESC, CRId DESC
+    </select>
+    <select id="findAll4" resultType="com.example.uchain.demo.Trade">
+        <!-- 引用sql语句 -->
+        <include refid="commonSelect"/>
+
+        <!-- 限定查询条件 -->
+        <where>
+            FavoritesState = 1
+            AND PurchaseState = 0
+            <choose>
+                <!-- 查询条件1：ownerName -->
+                <when test="code==1 and ownerName != null">
+                    AND ownerName LIKE CONCAT('%', #{ownerName}, '%')
+                </when>
+
+                <!-- 查询条件2：workName -->
+                <when test="code==2 and workName != null">
+                    AND workName LIKE CONCAT('%', #{workName}, '%')
+                </when>
+
+                <!-- 查询条件3：CRId -->
+                <when test="code==3 and CRId != null">
+                    AND CRId = #{CRId}
+                </when>
+
+                <!-- 查询条件4：workType -->
+                <when test="code==4 and workType != null">
+                    AND workType LIKE CONCAT('%', #{workType}, '%')
+                </when>
+
+                <!-- 查询条件5：authorization -->
+                <when test="code==5 and authorization != null">
+                    AND authorization LIKE CONCAT('%', #{authorization}, '%')
+                </when>
+
+                <!-- 查询条件6：blockAddress -->
+                <when test="code==6 and blockAddress != null">
+                    AND blockAddress LIKE CONCAT('%', #{blockAddress}, '%')
+                </when>
+
+                <!-- 查询条件7：uid -->
+                <when test="code==7 and uid != null">
+                    AND uid = #{uid}
+                </when>
+
+            </choose>
+        </where>
+
+        <!-- 按CRId 和交易时间降序排序 -->
+        ORDER BY treadTime DESC, CRId DESC
+    </select>
+    <select id="findAll5" resultType="com.example.uchain.demo.Trade">
+        <!-- 引用sql语句 -->
+        <include refid="commonSelect"/>
+
+        <!-- 限定查询条件 -->
+        <where>
+            PurchaseState = 1
+            <choose>
+                <!-- 查询条件1：ownerName -->
+                <when test="code==1 and ownerName != null">
+                    AND ownerName LIKE CONCAT('%', #{ownerName}, '%')
+                </when>
+
+                <!-- 查询条件2：workName -->
+                <when test="code==2 and workName != null">
+                    AND workName LIKE CONCAT('%', #{workName}, '%')
+                </when>
+
+                <!-- 查询条件3：CRId -->
+                <when test="code==3 and CRId != null">
+                    AND CRId = #{CRId}
+                </when>
+
+                <!-- 查询条件4：workType -->
+                <when test="code==4 and workType != null">
+                    AND workType LIKE CONCAT('%', #{workType}, '%')
+                </when>
+
+                <!-- 查询条件5：authorization -->
+                <when test="code==5 and authorization != null">
+                    AND authorization LIKE CONCAT('%', #{authorization}, '%')
+                </when>
+
+                <!-- 查询条件6：blockAddress -->
+                <when test="code==6 and blockAddress != null">
+                    AND blockAddress LIKE CONCAT('%', #{blockAddress}, '%')
+                </when>
+
+                <!-- 查询条件7：uid -->
+                <when test="code==7 and uid != null">
+                    AND uid = #{uid}
+                </when>
+            </choose>
+        </where>
+
+        <!-- 按CRId 和交易时间降序排序 -->
+        ORDER BY treadTime DESC, CRId DESC
+    </select>
+
+</mapper>

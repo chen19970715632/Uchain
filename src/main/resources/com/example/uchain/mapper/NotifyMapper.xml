@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.uchain.mapper.NotifyMapper">
+
+
+    <sql id="commonSelect">
+        select message ,
+               id,
+               notify_people,
+               notified_people,
+               time
+        from notify
+    </sql>
+
+    <!--    //修改信息-->
+    <update id="updateById">
+        update notify
+
+        <set>
+            <if test="message != null and message !='' ">
+                message = #{message},
+            </if>
+
+            <if test="id != null ">
+                id = #{id},
+            </if>
+
+            <if test="notifyPeople != null and notifyPeople !='' ">
+                notify_people = #{notifyPeople},
+            </if>
+
+            <if test="notifiedPeople != null and notifiedPeople !=''  ">
+                notified_people = #{notifiedPeople},
+            </if>
+
+            <if test="time != null and time !='' ">
+                time = #{time},
+            </if>
+        </set>
+        where id = #{id}
+
+    </update>
+
+    <!--    批量删除  根据id-->
+    <delete id="deleteNOtiById">
+        delete from notify where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>

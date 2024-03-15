@@ -1,0 +1,1 @@
+[{"constant":false,"inputs":[{"name":"CRId","type":"uint256"},{"name":"_workName","type":"string"},{"name":"_workType","type":"string"},{"name":"_BlockAddress","type":"string"},{"name":"_authorization","type":"string"},{"name":"_price","type":"uint256"}],"name":"addTrade","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]

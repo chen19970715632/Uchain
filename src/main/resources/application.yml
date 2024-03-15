@@ -1,0 +1,73 @@
+server:
+  port: 8080
+
+mybatis:
+  mapper-locations: classpath:mappers/*xml
+  type-aliases-package: com.example.uchain.mybatis.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/uchain
+    username: root
+    password: 111111
+  jackson:
+    parser:
+      allow-comments: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  mail:
+    host: smtp.qq.com
+    username: 2326211920@qq.com
+    password: qesxbsoqgbdwebai
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+    port: 587
+
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+
+system:
+  contract:
+    UChainAddress1: "0xb926f834280341c66456b9e5602fd017af371e4d"
+    UChainAddress2: "0x5e5f12175371c9847361dc415391760b1ce8bd36"
+project:
+  webase-url: http://123.207.53.161:5002/WeBASE-Front/trans/handle
+
+
+ip: localhost
+
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: debug
+
+
+knife4j:
+  enable: true
+  openapi:
+    title: 基于区块链的版权管理平台
+    description: 本产品是一个基于区块链和java所搭建的一个版权管理平台 其区块链部分所使用的为WeBase平台......
+    email: 232311232@qq.com
+    concat: hhc
+    url: https://docs.xiaominfo.com
+    version: v1.0
+    license: Apache 2.0
+    license-url: https://stackoverflow.com/
+    terms-of-service-url: https://stackoverflow.com/
+    group:
+      test1:
+        group-name: 分组名称
+        api-rule: package
+        api-rule-resources:
+          - com.example.uchain.controller

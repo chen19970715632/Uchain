@@ -1,0 +1,1 @@
+[{"constant":false,"inputs":[{"name":"wId","type":"uint256"},{"name":"worksName","type":"string"},{"name":"worksProperty","type":"string"},{"name":"introduce","type":"string"},{"name":"createAddress","type":"string"},{"name":"publishAddress","type":"string"}],"name":"addWork","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
